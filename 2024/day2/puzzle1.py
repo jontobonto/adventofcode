@@ -8,7 +8,6 @@ def is_monotonic(seq: list[int]):
     return is_increasing(seq) or is_decreasing(seq)
 
 def calculate_distance(a: int, b: int) -> int:
-    print(f"calculating distance for {a=}; {b=}: {abs(a-b)=}")
     return abs(a - b)
 
 def is_within_distance_range(seq: list[int], min_: int, max_: int):
@@ -27,16 +26,28 @@ class Report:
 with open("2024/day2/input.txt", "r") as file:
     inputs = file.readlines()
 
-safe_reports = []
-unsafe_reports = []
+safe_reports: list[Report] = []
+unsafe_reports: list[Report] = []
 
 for line in inputs:
     report = Report([int(level) for level in line.split()])
     if report.is_safe():
-        print(f"{report} is safe")
         safe_reports.append(report)
         continue
-    print(f"{report} is unsafe")
     unsafe_reports.append(report)
 
 print(f"{len(safe_reports) = }")
+
+made_safe_reports: list[Report] = []
+
+for report in unsafe_reports:
+    for i, n in enumerate(report.levels):
+        copy = report.levels.copy()
+        copy.pop(i)
+        if Report(copy).is_safe():
+            made_safe_reports.append(report)
+            break
+
+print(f"{len(made_safe_reports) = }")
+
+print(f"{len(safe_reports) + len(made_safe_reports) = }")
